@@ -145,15 +145,11 @@ return [
     */
 
     'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
-        Features::emailVerification(),
-        Features::updateProfileInformation(),
-        Features::updatePasswords(),
+        // Registration, password reset, email verification and profile updates
+        // are handled by this application's own controllers (routes/auth.php).
         Features::twoFactorAuthentication([
-            'confirm' => false,
+            'confirm' => true,
             'confirmPassword' => true,
-            // 'window' => 0,
         ]),
     ],
 

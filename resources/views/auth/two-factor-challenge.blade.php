@@ -12,7 +12,7 @@
             </ul>
         </div>
     @endif
-        <form method="POST" action="{{ route('two-factor.login') }}">
+        <form method="POST" action="{{ route('two-factor.login.store') }}">
             @csrf
             <div>
                 <x-input-label for="code" :value="_('Code')"/>
