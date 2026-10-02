@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\SecurityEventType;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\SecurityEvent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,6 +51,8 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
+
+        SecurityEvent::record(SecurityEventType::AccountDeleted, $user, ['email' => $user->email]);
 
         $user->delete();
 

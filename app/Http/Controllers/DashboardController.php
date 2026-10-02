@@ -14,6 +14,7 @@ class DashboardController extends Controller
     {
         return view('dashboard', [
             'user' => $request->user(),
+            'events' => $request->user()->securityEvents()->latest('id')->limit(10)->get(),
         ]);
     }
 }

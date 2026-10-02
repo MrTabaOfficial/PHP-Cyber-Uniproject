@@ -52,6 +52,19 @@
                     </dl>
                 </div>
             </div>
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <h3 class="text-lg font-medium">{{ __('Recent account activity') }}</h3>
+                    <p class="mt-1 text-sm text-gray-600">
+                        {{ __('The last 10 security events on your account. Change your password if you do not recognize one.') }}
+                    </p>
+
+                    <div class="mt-4">
+                        <x-security-events-table :events="$events" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>
