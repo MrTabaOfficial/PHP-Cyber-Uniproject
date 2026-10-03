@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Enums\SecurityEventType;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\SecurityEvent;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -49,6 +52,12 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        if ($user->isAdmin() && User::where('role', Role::Admin)->count() === 1) {
+            throw ValidationException::withMessages([
+                'password' => __('You are the only administrator. Promote another user before deleting this account.'),
+            ])->errorBag('userDeletion');
+        }
 
         Auth::logout();
 
