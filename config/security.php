@@ -4,6 +4,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Two-Factor Authentication For Administrators
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, an administrator who has not turned on two-factor
+    | authentication is sent to the setup page instead of the admin area.
+    |
+    */
+
+    'admin_requires_two_factor' => (bool) env('SECURITY_ADMIN_REQUIRES_2FA', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Audit Log
     |--------------------------------------------------------------------------
     |

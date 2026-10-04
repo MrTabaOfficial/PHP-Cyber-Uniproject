@@ -56,7 +56,7 @@ class UserManagementTest extends TestCase
 
     public function test_admin_can_list_search_and_filter_users(): void
     {
-        $admin = User::factory()->admin()->create(['name' => 'Ada Admin']);
+        $admin = User::factory()->admin()->withTwoFactor()->create(['name' => 'Ada Admin']);
         User::factory()->create(['name' => 'Grace Hopper', 'email' => 'grace@example.com']);
         User::factory()->create(['name' => 'Alan Turing', 'email' => 'alan@example.com']);
 
@@ -78,7 +78,7 @@ class UserManagementTest extends TestCase
 
     public function test_search_treats_like_wildcards_as_user_input(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
         User::factory()->create(['name' => 'Grace Hopper']);
 
         $this->actingAs($admin)->get('/admin/users?q='.urlencode("' OR 1=1 --"))
@@ -88,14 +88,14 @@ class UserManagementTest extends TestCase
 
     public function test_invalid_filters_are_rejected(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
 
         $this->actingAs($admin)->get('/admin/users?role=superuser')->assertSessionHasErrors('role');
     }
 
     public function test_admin_can_promote_a_user_and_the_change_is_audited(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
         $user = User::factory()->create();
 
         $this->actingAs($admin)
@@ -115,7 +115,7 @@ class UserManagementTest extends TestCase
     {
         Notification::fake();
 
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
         $user = User::factory()->create();
 
         $this->actingAs($admin)
@@ -133,7 +133,7 @@ class UserManagementTest extends TestCase
 
     public function test_email_must_stay_unique_and_role_must_be_valid(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
         $user = User::factory()->create();
 
         $this->actingAs($admin)
@@ -143,7 +143,7 @@ class UserManagementTest extends TestCase
 
     public function test_admin_cannot_change_their_own_role(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
 
         $this->actingAs($admin)
             ->patch("/admin/users/{$admin->id}", ['name' => $admin->name, 'email' => $admin->email, 'role' => 'user'])
@@ -154,7 +154,7 @@ class UserManagementTest extends TestCase
 
     public function test_admin_can_delete_a_user_and_the_deletion_is_audited(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
         $user = User::factory()->create();
 
         $this->actingAs($admin)
@@ -170,7 +170,7 @@ class UserManagementTest extends TestCase
 
     public function test_admin_cannot_delete_their_own_account_from_the_admin_panel(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
 
         $this->actingAs($admin)->delete("/admin/users/{$admin->id}")->assertForbidden();
 
@@ -179,7 +179,7 @@ class UserManagementTest extends TestCase
 
     public function test_the_only_admin_cannot_delete_their_account_from_the_profile(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
 
         $this->actingAs($admin)
             ->from('/profile')
@@ -191,7 +191,7 @@ class UserManagementTest extends TestCase
 
     public function test_admin_can_filter_the_audit_log(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->admin()->withTwoFactor()->create();
         $user = User::factory()->create(['email' => 'grace@example.com']);
 
         SecurityEvent::create(['user_id' => $user->id, 'type' => SecurityEventType::LoginFailed, 'ip_address' => '203.0.113.7']);
