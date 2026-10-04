@@ -9,7 +9,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            @if (session('status') === 'two-factor-required')
+            @if ($requiredForAdmin)
                 <div class="rounded-md bg-yellow-50 p-4 text-sm text-yellow-800" role="alert">
                     {{ __('Administrators must turn on two-factor authentication before opening the admin area.') }}
                 </div>
@@ -76,7 +76,7 @@
                         <ol class="mt-6 list-decimal space-y-4 ps-5 text-sm text-gray-700">
                             <li>
                                 {{ __('Scan this QR code with your authenticator app.') }}
-                                <div class="mt-3 inline-block rounded-lg border border-gray-200 bg-white p-3">
+                                <div class="mt-3 w-fit rounded-lg border border-gray-200 bg-white p-3">
                                     {!! $user->twoFactorQrCodeSvg() !!}
                                 </div>
                                 <p class="mt-3">

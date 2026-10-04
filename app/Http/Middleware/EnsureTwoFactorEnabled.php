@@ -16,7 +16,7 @@ class EnsureTwoFactorEnabled
     public function handle(Request $request, Closure $next): Response
     {
         if (config('security.admin_requires_two_factor') && ! $request->user()->hasEnabledTwoFactorAuthentication()) {
-            return redirect()->route('two-factor.show')->with('status', 'two-factor-required');
+            return redirect()->route('two-factor.show');
         }
 
         return $next($request);

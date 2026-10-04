@@ -180,9 +180,11 @@ class TwoFactorAuthenticationTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $this->actingAs($admin)->get('/admin/users')
-            ->assertRedirect('/profile/two-factor')
-            ->assertSessionHas('status', 'two-factor-required');
+        $this->actingAs($admin)->get('/admin/users')->assertRedirect('/profile/two-factor');
+
+        $this->actingAs($admin)->withSession(['auth.password_confirmed_at' => time()])
+            ->get('/profile/two-factor')
+            ->assertSee('Administrators must turn on two-factor authentication');
 
         config(['security.admin_requires_two_factor' => false]);
 

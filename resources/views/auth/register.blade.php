@@ -28,6 +28,9 @@
                         title="Password must contain at least one lowercase letter, one uppercase letter, one number, and one symbol, and be at least 8 characters long."
             />
 
+            <p id="password-hint" class="mt-2 text-sm text-gray-600">
+                {{ __('At least 12 characters with upper and lower case letters, a number and a symbol.') }}
+            </p>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 

@@ -81,8 +81,8 @@ class AuditLogTest extends TestCase
 
         $this->actingAs($user)->put('/password', [
             'current_password' => 'password',
-            'password' => 'new-password',
-            'password_confirmation' => 'new-password',
+            'password' => 'Str0ng-Passphrase!',
+            'password_confirmation' => 'Str0ng-Passphrase!',
         ]);
 
         $this->actingAs($user)->post('/logout');

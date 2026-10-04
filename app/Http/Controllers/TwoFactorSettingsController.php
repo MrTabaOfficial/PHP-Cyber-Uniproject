@@ -23,6 +23,11 @@ class TwoFactorSettingsController extends Controller
         return view('profile.two-factor', [
             'user' => $user,
             'enabled' => $user->hasEnabledTwoFactorAuthentication(),
+            // Derived from state rather than a flash message, which would be lost
+            // on the password confirmation detour in front of this page.
+            'requiredForAdmin' => $user->isAdmin()
+                && config('security.admin_requires_two_factor')
+                && ! $user->hasEnabledTwoFactorAuthentication(),
             'pending' => $user->two_factor_secret && ! $user->two_factor_confirmed_at,
             // Recovery codes are displayed once: right after they are created.
             'showRecoveryCodes' => in_array($status, [
