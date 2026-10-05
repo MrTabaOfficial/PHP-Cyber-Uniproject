@@ -1,66 +1,130 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PHP Cyber Uniproject
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![CI](https://github.com/MrTabaOfficial/PHP-Cyber-Uniproject/actions/workflows/ci.yml/badge.svg)](https://github.com/MrTabaOfficial/PHP-Cyber-Uniproject/actions/workflows/ci.yml)
+![PHP 8.3+](https://img.shields.io/badge/PHP-8.3%2B-777BB4)
+![Laravel 13](https://img.shields.io/badge/Laravel-13-FF2D20)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## About Laravel
+A Laravel application about one topic: keeping user accounts secure. It implements two-factor sign-in, role-based access to an admin panel, an audit log of security events and strict browser security headers, and it tests each of them.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The project started as university coursework for a cyber security module in December 2023. It was reworked in October 2026: upgraded from Laravel 10 to 13, the broken role handling was fixed, and the admin panel, audit log, two-factor flow, headers and tests were added.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+![Admin user list](docs/screenshots/admin-users.png)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+| Feature | What it does | Where to look |
+| --- | --- | --- |
+| Two-factor authentication | TOTP codes from an authenticator app. Setup is only active after a code is confirmed. Eight single-use recovery codes are shown once. | [two-factor.blade.php](resources/views/profile/two-factor.blade.php), [config/fortify.php](config/fortify.php) |
+| Mandatory two-factor for admins | An administrator without two-factor is sent to the setup page instead of the admin area. | [EnsureTwoFactorEnabled.php](app/Http/Middleware/EnsureTwoFactorEnabled.php) |
+| Role-based access control | An enum-backed `role` column, a policy and a middleware. The role is not mass assignable. | [Role.php](app/Enums/Role.php), [UserPolicy.php](app/Policies/UserPolicy.php), [EnsureUserIsAdmin.php](app/Http/Middleware/EnsureUserIsAdmin.php) |
+| Admin panel | Search and filter users, edit name, email and role, delete users, review each account's recent activity. | [UserController.php](app/Http/Controllers/Admin/UserController.php) |
+| Security audit log | Records sign-ins, failed attempts, lockouts, logouts, password and two-factor changes and admin actions with IP address and browser. | [RecordSecurityEvents.php](app/Listeners/RecordSecurityEvents.php), [SecurityEvent.php](app/Models/SecurityEvent.php) |
+| Security headers | Content Security Policy, anti-framing, `nosniff`, referrer and permissions policies, HSTS on HTTPS, `no-store` for signed-in pages. | [SecurityHeaders.php](app/Http/Middleware/SecurityHeaders.php) |
+| Password policy | 12 or more characters with upper case, lower case, a number and a symbol. Checked against known breaches in production. | [AppServiceProvider.php](app/Providers/AppServiceProvider.php) |
+| Rate limiting | 5 sign-in attempts per minute per email and IP address, 5 two-factor attempts per minute, 6 per minute on registration and password reset. | [FortifyServiceProvider.php](app/Providers/FortifyServiceProvider.php), [routes/auth.php](routes/auth.php) |
+| Email verification | The dashboard and admin area require a verified email address. | [routes/web.php](routes/web.php) |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Screenshots
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+| Two-factor setup | Recovery codes |
+| --- | --- |
+| ![Two-factor setup with QR code](docs/screenshots/two-factor-setup.png) | ![Recovery codes shown after setup](docs/screenshots/two-factor-enabled.png) |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Sign-in challenge | Audit log |
+| --- | --- |
+| ![Two-factor sign-in challenge](docs/screenshots/two-factor-challenge.png) | ![Audit log for administrators](docs/screenshots/audit-log.png) |
 
-## Laravel Sponsors
+| Dashboard | Editing a user |
+| --- | --- |
+| ![Dashboard with account security status](docs/screenshots/dashboard.png) | ![Admin user edit page](docs/screenshots/admin-user-edit.png) |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+The secret and recovery codes in these screenshots belong to a local demo database that no longer exists.
 
-### Premium Partners
+## Threats and controls
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+| Threat | Control | Test |
+| --- | --- | --- |
+| Password guessing | Rate limit per email and IP address. Every failure and lockout is logged. | [AuditLogTest](tests/Feature/Security/AuditLogTest.php) |
+| Stolen password | Two-factor challenge after the password step. The session is not authenticated until the code is accepted. | [TwoFactorAuthenticationTest](tests/Feature/Security/TwoFactorAuthenticationTest.php) |
+| Weak passwords | One password policy for registration, change and reset. | [PasswordPolicyTest](tests/Feature/Security/PasswordPolicyTest.php) |
+| Privilege escalation | `role` is excluded from mass assignment. Admin routes need the admin middleware and a policy check. Nobody can change their own role. | [RoleTest](tests/Feature/RoleTest.php), [UserManagementTest](tests/Feature/Admin/UserManagementTest.php) |
+| Losing the last administrator | An admin cannot delete or demote themselves in the panel, and the only admin cannot delete their own account. | [UserManagementTest](tests/Feature/Admin/UserManagementTest.php) |
+| Cross-site scripting | Blade escapes output. The Content Security Policy blocks inline scripts and inline event handlers, and the views contain none. | [SecurityHeadersTest](tests/Feature/Security/SecurityHeadersTest.php) |
+| Clickjacking | `X-Frame-Options: DENY` and `frame-ancestors 'none'`. | [SecurityHeadersTest](tests/Feature/Security/SecurityHeadersTest.php) |
+| Cross-site request forgery | Laravel's CSRF token on every state-changing form, plus `form-action 'self'`. | Framework default |
+| Page restored from cache after logout | `Cache-Control: no-store` on responses for signed-in users. | [SecurityHeadersTest](tests/Feature/Security/SecurityHeadersTest.php) |
+| Unnoticed account takeover | Users see their own recent security events on the dashboard. Admins see all events. Events survive account deletion. | [AuditLogTest](tests/Feature/Security/AuditLogTest.php) |
+| Changing two-factor from an unattended session | The two-factor settings page and every two-factor action require a recently confirmed password. | [TwoFactorAuthenticationTest](tests/Feature/Security/TwoFactorAuthenticationTest.php) |
 
-## Contributing
+## Run it locally
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Requirements: PHP 8.3 or newer with the `pdo_sqlite`, `mbstring`, `openssl` and `fileinfo` extensions, Composer 2, and Node.js 20 or newer.
 
-## Code of Conduct
+1. Install the dependencies.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   composer install
+   npm install
+   ```
 
-## Security Vulnerabilities
+2. Create `.env`, the SQLite database and the demo accounts.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   ```bash
+   composer setup
+   ```
+
+3. Build the assets and start the server.
+
+   ```bash
+   npm run build
+   php artisan serve
+   ```
+
+4. Open <http://localhost:8000>.
+
+`composer setup` runs `migrate:fresh --seed`, so it erases the local database each time.
+
+### Demo accounts
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Administrator | `admin@example.com` | `Demo-Passw0rd!` |
+| User | `user@example.com` | `Demo-Passw0rd!` |
+
+The seeder refuses to create these accounts when `APP_ENV=production`.
+
+To try the full flow, sign in as the administrator and open **Users**. The app asks for the password again and then walks through two-factor setup with any authenticator app.
+
+Verification and password reset emails are not sent. With `MAIL_MAILER=log` they are written to `storage/logs/laravel.log`.
+
+## Tests
+
+```bash
+composer test   # 80 feature tests on in-memory SQLite
+composer lint   # code style check with Laravel Pint
+```
+
+The two-factor tests generate real TOTP codes from the stored secret instead of mocking the provider. The same flow was also run in headless Chrome with the Content Security Policy active, with no console errors.
+
+GitHub Actions runs the tests, the style check, the asset build, `composer audit` and `npm audit` on every push and pull request. See [ci.yml](.github/workflows/ci.yml).
+
+## Configuration
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `SECURITY_ADMIN_REQUIRES_2FA` | `true` | Administrators must enable two-factor before using the admin area. |
+| `SECURITY_AUDIT_RETENTION_DAYS` | `90` | Age at which the daily `model:prune` schedule deletes a security event. |
+| `SESSION_SECURE_COOKIE` | `false` | Set to `true` when the site is served over HTTPS. |
+
+## Known limitations
+
+- The Content Security Policy allows `'unsafe-eval'` for scripts. Alpine.js needs it to evaluate its inline expressions. Inline scripts stay blocked.
+- Rate limiting is per email and IP address. An attacker who rotates IP addresses is slowed only per address. There is no CAPTCHA.
+- The audit log is a normal database table. An attacker with database access could alter it.
+- The pruning schedule needs the Laravel scheduler (`php artisan schedule:work` or a cron entry) to be running.
+- The application has not been deployed or load tested. It is a learning project, not a production service.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Released under the [MIT License](LICENSE).
