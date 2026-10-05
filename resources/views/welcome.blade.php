@@ -22,10 +22,10 @@
 
                 <nav class="flex items-center gap-4 text-sm font-medium">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="rounded-md px-3 py-2 text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ __('Dashboard') }}</a>
+                        <a href="{{ route('dashboard') }}" class="rounded-md px-3 py-2 text-gray-700 hover:text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">{{ __('Dashboard') }}</a>
                     @else
-                        <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ __('Log in') }}</a>
-                        <a href="{{ route('register') }}" class="rounded-md bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{{ __('Register') }}</a>
+                        <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-gray-700 hover:text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500">{{ __('Log in') }}</a>
+                        <a href="{{ route('register') }}" class="rounded-md bg-gray-800 px-4 py-2 text-white hover:bg-gray-700 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">{{ __('Register') }}</a>
                     @endauth
                 </nav>
             </header>
@@ -48,7 +48,7 @@
                         ['Security audit log', 'Sign-ins, failures, lockouts, password and role changes are recorded with IP address and browser, and shown to the account owner.'],
                         ['Hardened defaults', 'Content Security Policy, anti-framing and no-store headers, login rate limiting, a 12-character password policy and email verification.'],
                     ] as [$title, $text])
-                        <div class="rounded-lg bg-white p-6 shadow-sm">
+                        <div class="rounded-lg bg-white p-6 shadow-xs">
                             <h2 class="text-lg font-medium">{{ __($title) }}</h2>
                             <p class="mt-2 text-sm leading-relaxed text-gray-600">{{ __($text) }}</p>
                         </div>

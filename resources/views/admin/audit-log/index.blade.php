@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-xs sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <form method="GET" action="{{ route('admin.audit-log') }}" class="flex flex-col gap-4 sm:flex-row sm:items-end">
                         <div class="flex-1">
@@ -17,7 +17,7 @@
 
                         <div>
                             <x-input-label for="type" :value="__('Event')" />
-                            <select id="type" name="type" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <select id="type" name="type" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-xs">
                                 <option value="">{{ __('All events') }}</option>
                                 @foreach ($types as $type)
                                     <option value="{{ $type->value }}" @selected(($filters['type'] ?? null) === $type->value)>{{ __($type->label()) }}</option>

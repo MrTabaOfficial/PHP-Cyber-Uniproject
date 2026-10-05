@@ -13,7 +13,7 @@
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="bg-white overflow-hidden shadow-xs sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-col gap-4 sm:flex-row sm:items-end">
                         <div class="flex-1">
@@ -23,7 +23,7 @@
 
                         <div>
                             <x-input-label for="role" :value="__('Role')" />
-                            <select id="role" name="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <select id="role" name="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-xs">
                                 <option value="">{{ __('All roles') }}</option>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->value }}" @selected(($filters['role'] ?? null) === $role->value)>{{ __($role->label()) }}</option>
@@ -73,7 +73,7 @@
                                         </td>
                                         <td class="whitespace-nowrap py-3 pe-4 text-gray-600">{{ $user->created_at->toFormattedDateString() }}</td>
                                         <td class="py-3 text-end">
-                                            <a href="{{ route('admin.users.edit', $user) }}" class="font-medium text-indigo-600 hover:text-indigo-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            <a href="{{ route('admin.users.edit', $user) }}" class="font-medium text-indigo-600 hover:text-indigo-900 rounded-md focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                                 {{ __('Manage') }}<span class="sr-only">, {{ $user->name }}</span>
                                             </a>
                                         </td>

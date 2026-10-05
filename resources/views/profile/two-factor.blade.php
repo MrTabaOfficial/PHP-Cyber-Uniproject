@@ -15,7 +15,7 @@
                 </div>
             @endif
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                 <section class="max-w-xl">
                     <header>
                         <h2 class="flex items-center gap-3 text-lg font-medium text-gray-900">
@@ -81,7 +81,7 @@
                                 </div>
                                 <p class="mt-3">
                                     {{ __('Cannot scan it? Enter this setup key instead:') }}
-                                    <code class="break-all rounded bg-gray-100 px-1.5 py-0.5 font-mono text-gray-900">{{ decrypt($user->two_factor_secret) }}</code>
+                                    <code class="break-all rounded-sm bg-gray-100 px-1.5 py-0.5 font-mono text-gray-900">{{ decrypt($user->two_factor_secret) }}</code>
                                 </p>
                             </li>
                             <li>
@@ -102,7 +102,7 @@
                         <form method="POST" action="{{ route('two-factor.disable') }}" class="mt-6">
                             @csrf
                             @method('delete')
-                            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 {{ __('Cancel setup') }}
                             </button>
                         </form>

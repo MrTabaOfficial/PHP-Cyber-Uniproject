@@ -27,7 +27,7 @@ class RecordSecurityEvents
      * Framework and Fortify events that map straight onto an audit entry
      * for the user carried by the event.
      *
-     * @var array<class-string, \App\Enums\SecurityEventType>
+     * @var array<class-string, SecurityEventType>
      */
     protected const USER_EVENTS = [
         Login::class => SecurityEventType::LoginSucceeded,

@@ -9,7 +9,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                 <section class="max-w-xl">
                     <header>
                         <h2 class="text-lg font-medium text-gray-900">{{ __('Account details') }}</h2>
@@ -37,7 +37,7 @@
                         <div>
                             <x-input-label for="role" :value="__('Role')" />
                             @can('changeRole', $user)
-                                <select id="role" name="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                <select id="role" name="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-xs">
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->value }}" @selected(old('role', $user->role->value) === $role->value)>{{ __($role->label()) }}</option>
                                     @endforeach
@@ -62,7 +62,7 @@
                 </section>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                 <section>
                     <header>
                         <h2 class="text-lg font-medium text-gray-900">{{ __('Recent account activity') }}</h2>
@@ -75,7 +75,7 @@
             </div>
 
             @can('delete', $user)
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="p-4 sm:p-8 bg-white shadow-sm sm:rounded-lg">
                     <section class="max-w-xl space-y-6">
                         <header>
                             <h2 class="text-lg font-medium text-gray-900">{{ __('Delete user') }}</h2>
