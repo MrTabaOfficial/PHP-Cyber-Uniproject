@@ -109,6 +109,72 @@ The two-factor tests generate real TOTP codes from the stored secret instead of 
 
 GitHub Actions runs the tests, the style check, the asset build, `composer audit` and `npm audit` on every push and pull request. See [ci.yml](.github/workflows/ci.yml).
 
+## Project structure
+
+Only the parts specific to this project are shown. Everything else is the standard Laravel layout.
+
+```text
+PHP-Cyber-Uniproject/
+├── .github/workflows/ci.yml            # build, style check, tests, dependency audits
+├── app/
+│   ├── Enums/
+│   │   ├── Role.php                    # user / admin
+│   │   └── SecurityEventType.php       # every audit log event, with label and color
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/
+│   │   │   │   ├── AuditLogController.php
+│   │   │   │   └── UserController.php  # list, edit, role change, delete
+│   │   │   ├── Auth/                   # registration, verification, password reset
+│   │   │   ├── DashboardController.php
+│   │   │   ├── ProfileController.php
+│   │   │   └── TwoFactorSettingsController.php
+│   │   ├── Middleware/
+│   │   │   ├── EnsureTwoFactorEnabled.php  # admins must have two-factor
+│   │   │   ├── EnsureUserIsAdmin.php
+│   │   │   └── SecurityHeaders.php     # CSP, HSTS, anti-framing, no-store
+│   │   └── Requests/Admin/UpdateUserRequest.php
+│   ├── Listeners/RecordSecurityEvents.php  # auth events -> audit log
+│   ├── Models/
+│   │   ├── SecurityEvent.php
+│   │   └── User.php
+│   ├── Policies/UserPolicy.php
+│   └── Providers/
+│       ├── AppServiceProvider.php      # password policy
+│       └── FortifyServiceProvider.php  # login and two-factor rate limits
+├── config/
+│   ├── fortify.php                     # two-factor with confirmation
+│   └── security.php                    # admin two-factor rule, audit retention
+├── database/
+│   ├── factories/UserFactory.php       # admin() and withTwoFactor() states
+│   ├── migrations/                     # users, role, two-factor columns, security_events
+│   └── seeders/DatabaseSeeder.php      # demo accounts
+├── docs/screenshots/
+├── resources/
+│   ├── css/app.css                     # Tailwind CSS 4 configuration
+│   ├── js/app.js                       # Alpine.js
+│   └── views/
+│       ├── admin/                      # users and audit log pages
+│       ├── auth/                       # login, register, two-factor challenge
+│       ├── components/                 # buttons, badges, security events table
+│       ├── profile/                    # profile and two-factor settings
+│       ├── dashboard.blade.php
+│       └── welcome.blade.php
+├── routes/
+│   ├── auth.php                        # registration, verification, password reset
+│   └── web.php                         # dashboard, profile, admin area
+└── tests/Feature/
+    ├── Admin/UserManagementTest.php
+    ├── Auth/                           # login, registration, reset, verification
+    ├── Security/
+    │   ├── AuditLogTest.php
+    │   ├── PasswordPolicyTest.php
+    │   ├── SecurityHeadersTest.php
+    │   └── TwoFactorAuthenticationTest.php
+    ├── ProfileTest.php
+    └── RoleTest.php
+```
+
 ## Configuration
 
 | Variable | Default | Meaning |
