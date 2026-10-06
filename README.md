@@ -1,5 +1,7 @@
 # PHP Cyber Uniproject
 
+**English** | [ქართული](README.ka.md)
+
 [![CI](https://github.com/MrTabaOfficial/PHP-Cyber-Uniproject/actions/workflows/ci.yml/badge.svg)](https://github.com/MrTabaOfficial/PHP-Cyber-Uniproject/actions/workflows/ci.yml)
 ![PHP 8.3+](https://img.shields.io/badge/PHP-8.3%2B-777BB4)
 ![Laravel 13](https://img.shields.io/badge/Laravel-13-FF2D20)
