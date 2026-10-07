@@ -108,10 +108,11 @@ return [
     |
     | Here you may define the amount of seconds before a password confirmation
     | times out and the user is prompted to re-enter their password via the
-    | confirmation screen. By default, the timeout lasts for three hours.
+    | confirmation screen. Two-factor settings sit behind this confirmation, so
+    | the window is 15 minutes instead of the framework default of three hours.
     |
     */
 
-    'password_timeout' => 10800,
+    'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 900),
 
 ];

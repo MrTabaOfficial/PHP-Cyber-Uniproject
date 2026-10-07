@@ -103,7 +103,7 @@ Verification and password reset emails are not sent. With `MAIL_MAILER=log` they
 ## Tests
 
 ```bash
-composer test   # 80 feature tests on in-memory SQLite
+composer test   # 86 feature tests on in-memory SQLite
 composer lint   # code style check with Laravel Pint
 ```
 
@@ -170,6 +170,7 @@ PHP-Cyber-Uniproject/
     ├── Auth/                           # login, registration, reset, verification
     ├── Security/
     │   ├── AuditLogTest.php
+    │   ├── ConfigurationTest.php
     │   ├── PasswordPolicyTest.php
     │   ├── SecurityHeadersTest.php
     │   └── TwoFactorAuthenticationTest.php
@@ -177,13 +178,34 @@ PHP-Cyber-Uniproject/
     └── RoleTest.php
 ```
 
+## Secrets and security settings
+
+No secret is stored in the repository. Every secret comes from `.env`, which Git ignores.
+
+| Item | How it is handled |
+| --- | --- |
+| `APP_KEY` | Empty in `.env.example` and generated per installation by `composer setup`. It encrypts cookies, sessions and two-factor secrets. |
+| Passwords | Stored as bcrypt hashes with 12 rounds. Never logged, including in the audit log. |
+| Two-factor secret and recovery codes | Encrypted in the database with `APP_KEY` and hidden from model serialization. |
+| Session | Data encrypted at rest. The cookie is `HttpOnly`, `SameSite=Lax` and HTTPS-only when `APP_ENV=production`. |
+| Password confirmation | Valid for 15 minutes before two-factor settings ask for the password again. |
+| Host header | Requests for a host other than `APP_URL` and its subdomains are rejected outside local development, so password reset links cannot be pointed at another domain. |
+| API | No API routes are exposed. |
+| Demo password | `Demo-Passw0rd!` is public on purpose. The seeder does not run when `APP_ENV=production`. |
+
+Before deploying, set `APP_ENV=production`, `APP_DEBUG=false` and a real `APP_URL`. Changing `APP_KEY` later makes existing two-factor secrets unreadable, so users would have to set up two-factor again.
+
+These settings are checked in [ConfigurationTest](tests/Feature/Security/ConfigurationTest.php).
+
 ## Configuration
 
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `SECURITY_ADMIN_REQUIRES_2FA` | `true` | Administrators must enable two-factor before using the admin area. |
 | `SECURITY_AUDIT_RETENTION_DAYS` | `90` | Age at which the daily `model:prune` schedule deletes a security event. |
-| `SESSION_SECURE_COOKIE` | `false` | Set to `true` when the site is served over HTTPS. |
+| `SESSION_SECURE_COOKIE` | `true` in production | Send the session cookie over HTTPS only. |
+| `SESSION_ENCRYPT` | `true` | Encrypt session data at rest. |
+| `AUTH_PASSWORD_TIMEOUT` | `900` | Seconds a password confirmation stays valid. |
 
 ## Known limitations
 
